@@ -1,6 +1,8 @@
 import express, {Request, Response} from 'express'
 import logger from 'morgan'
 import cookieParser from 'cookie-parser'
+import userRouter from './routes/users'
+import indexRouter from './routes/index'
 
 const app = express()
 
@@ -8,11 +10,9 @@ app.use(express.json())
 app.use(logger('dev'))
 app.use(cookieParser())
 
-app.get('/home', (req:Request, res:Response)=>{
-  res.status(200).json({
-    message: "Success"
-  })
-})
+//Router Middleware
+app.use('/', indexRouter)
+app.use('/users',userRouter)
 
 
 const port = 3500
