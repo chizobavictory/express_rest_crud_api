@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 //Router Middleware
 app.use("/", indexRouter);
-app.use("/users", userRouter);
+app.use('/users', userRouter);
 
 const port = 3500;
 app.listen(port, () => {

@@ -23,7 +23,7 @@ app.use((0, morgan_1.default)("dev"));
 app.use((0, cookie_parser_1.default)());
 //Router Middleware
 app.use("/", index_1.default);
-app.use("/users", users_1.default);
+app.use('/users', users_1.default);
 const port = 3500;
 app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
