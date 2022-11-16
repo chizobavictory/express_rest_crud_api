@@ -10,7 +10,7 @@ const users_1 = __importDefault(require("./routes/users"));
 const index_1 = __importDefault(require("./routes/index"));
 const config_1 = require("./config");
 //sequelize connection
-config_1.db.sync({ force: true })
+config_1.db.sync()
     .then(() => {
     console.log("Db connected successfully");
 })
