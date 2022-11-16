@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.option = exports.registerSchema = void 0;
+exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 exports.registerSchema = joi_1.default.object().keys({
     email: joi_1.default.string().required(),
     phone: joi_1.default.string().required(),
@@ -23,3 +24,11 @@ exports.option = {
         },
     },
 };
+const GenerateSalt = async () => {
+    return await bcrypt_1.default.genSalt();
+};
+exports.GenerateSalt = GenerateSalt;
+const GeneratePassword = async (password, salt) => {
+    return await bcrypt_1.default.hash(password, salt);
+};
+exports.GeneratePassword = GeneratePassword;
