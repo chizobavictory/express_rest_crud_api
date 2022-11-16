@@ -19,7 +19,7 @@ export const onRequestOTP = async (otp: number, toPhoneNumber: string) => {
   return response;
 };
 
-export const transport = nodemailer.createTransport({
+const transport = nodemailer.createTransport({
   host: "gmail",
   auth: {
     user: GMAIL_USER,
@@ -29,3 +29,21 @@ export const transport = nodemailer.createTransport({
     rejectUnauthorized: false,
   },
 });
+
+
+export const mailSent = async(
+  from:string , 
+  to:string , 
+  subject:string , 
+  text:string , // plain text body
+  html: string, // html body
+)=>{
+  try {
+    await transport.sendMail({
+      from: 
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
