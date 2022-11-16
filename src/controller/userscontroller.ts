@@ -46,14 +46,15 @@ export const Register = async (req: Request, res: Response) => {
       await onRequestOTP(otp, phone);
 
       return res.status(201).json({
-        message: "User created succesfuly",
+        message: "User created succesfully",
         user,
       });
     }
     return res.status(400).json({
       message: "User already exists",
     });
-  } catch (err) {
+  } catch (err: any) {
+    console.log(err.message);
     res.status(500).json({
       Error: "Internal server Error",
       route: "/users/signup",

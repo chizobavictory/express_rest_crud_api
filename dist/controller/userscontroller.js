@@ -38,8 +38,10 @@ const Register = async (req, res) => {
                 lat: 0,
                 verified: false,
             });
+            // Send OTP to user
+            await (0, utils_1.onRequestOTP)(otp, phone);
             return res.status(201).json({
-                message: "User created succesfuly",
+                message: "User created succesfully",
                 user,
             });
         }
@@ -48,6 +50,7 @@ const Register = async (req, res) => {
         });
     }
     catch (err) {
+        console.log(err.message);
         res.status(500).json({
             Error: "Internal server Error",
             route: "/users/signup",
