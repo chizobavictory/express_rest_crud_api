@@ -16,7 +16,7 @@ export interface UserAttributes {
   verified: boolean;
 }
 
-class UserInstance extends Model<UserAttributes> {}
+export class UserInstance extends Model<UserAttributes> {}
 
 UserInstance.init(
   {

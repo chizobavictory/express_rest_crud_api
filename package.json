@@ -26,6 +26,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/http-errors": "^2.0.1",
-    "@types/morgan": "^1.9.3"
+    "@types/morgan": "^1.9.3",
+    "@types/uuid": "^8.3.4"
   }
 }
