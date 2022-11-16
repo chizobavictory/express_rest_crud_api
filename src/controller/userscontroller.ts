@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
-import { registerSchema, option, GeneratePassword, GenerateSalt, GenerateOTP } from "../utils";
+import { registerSchema, option, GeneratePassword, GenerateSalt, GenerateOTP, onRequestOTP } from "../utils";
 import { UserInstance } from "../model/userModel";
 import { v4 as uuidv4 } from "uuid";
 
 export const Register = async (req: Request, res: Response) => {
   try {
     const { email, phone, password, confirm_password } = req.body;
+    const uuidUser = uuidv4();
     const validateResult = registerSchema.validate(req.body, option);
 
     if (validateResult.error) {
@@ -24,7 +25,6 @@ export const Register = async (req: Request, res: Response) => {
     const User = await UserInstance.findOne({ where: { email: email } });
 
     //create user
-    const uuidUser = uuidv4();
     if (!User) {
       let user = await UserInstance.create({
         id: uuidUser,
@@ -42,16 +42,17 @@ export const Register = async (req: Request, res: Response) => {
         verified: false,
       });
 
-      res.status(201).json({
+      // Send OTP to user
+      await onRequestOTP(otp, phone);
+
+      return res.status(201).json({
         message: "User created succesfuly",
         user,
       });
     }
-    res.status(400).json({
+    return res.status(400).json({
       message: "User already exists",
     });
-
-    
   } catch (err) {
     res.status(500).json({
       Error: "Internal server Error",

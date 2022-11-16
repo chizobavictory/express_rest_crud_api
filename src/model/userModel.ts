@@ -1,5 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
-import { db } from "../config/database";
+import { db } from "../config";
 export interface UserAttributes {
   id: string;
   email: string;

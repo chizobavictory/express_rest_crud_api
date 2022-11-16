@@ -7,6 +7,7 @@ const uuid_1 = require("uuid");
 const Register = async (req, res) => {
     try {
         const { email, phone, password, confirm_password } = req.body;
+        const uuidUser = (0, uuid_1.v4)();
         const validateResult = utils_1.registerSchema.validate(req.body, utils_1.option);
         if (validateResult.error) {
             return res.status(400).json({
@@ -21,7 +22,6 @@ const Register = async (req, res) => {
         //check if user exists
         const User = await userModel_1.UserInstance.findOne({ where: { email: email } });
         //create user
-        const uuidUser = (0, uuid_1.v4)();
         if (!User) {
             let user = await userModel_1.UserInstance.create({
                 id: uuidUser,
@@ -38,12 +38,12 @@ const Register = async (req, res) => {
                 lat: 0,
                 verified: false,
             });
-            res.status(201).json({
+            return res.status(201).json({
                 message: "User created succesfuly",
                 user,
             });
         }
-        res.status(400).json({
+        return res.status(400).json({
             message: "User already exists",
         });
     }

@@ -3,7 +3,7 @@ import logger from "morgan";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/users";
 import indexRouter from "./routes/index";
-import { db } from "./config/database";
+import { db } from "./config";
 
 //sequelize connection
 db.sync()
@@ -22,7 +22,7 @@ app.use(cookieParser());
 
 //Router Middleware
 app.use("/", indexRouter);
-app.use('/users', userRouter);
+app.use("/users", userRouter);
 
 const port = 3500;
 app.listen(port, () => {
