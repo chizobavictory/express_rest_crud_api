@@ -1,5 +1,5 @@
-import { accountSid, authToken, fromAdminPhone,GMAIL_PASS,GMAIL_USER } from "../config";
-import nodemailer from 'nodemailer'
+import { accountSid, authToken, fromAdminPhone, GMAIL_PASS, GMAIL_USER } from "../config";
+import nodemailer from "nodemailer";
 
 export const GenerateOTP = () => {
   const otp = Math.floor(1000 + Math.random() * 9000);
@@ -19,12 +19,13 @@ export const onRequestOTP = async (otp: number, toPhoneNumber: string) => {
   return response;
 };
 
-
 export const transport = nodemailer.createTransport({
-  host:"gmail",
+  host: "gmail",
   auth: {
     user: GMAIL_USER,
-    pass: GMAIL_PASS, 
+    pass: GMAIL_PASS,
   },
-
-})
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
