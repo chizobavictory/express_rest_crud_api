@@ -8,7 +8,7 @@ import {
   onRequestOTP,
   sendmail,
   emailHTML,
-  GenerateSignature
+  GenerateSignature,
 } from "../utils";
 import { UserAttributes, UserInstance } from "../model/userModel";
 import { v4 as uuidv4 } from "uuid";
@@ -36,7 +36,7 @@ export const Register = async (req: Request, res: Response) => {
     const html = emailHTML(otp);
     await sendmail(fromAdminMail, email, userSubject, html);
 
-    //check if user exists
+    //check if user exists - The email exists with us
     const User = await UserInstance.findOne({ where: { email: email } });
 
     //create user
@@ -65,16 +65,16 @@ export const Register = async (req: Request, res: Response) => {
       await sendmail(fromAdminMail, email, userSubject, html);
 
       //Check if user exists
-      const User = await UserInstance.findOne({
+      const User = (await UserInstance.findOne({
         where: { email: email },
-      }) as unknown as UserAttributes;
+      })) as unknown as UserAttributes;
 
       //Generate GenerateSignature
       let signature = await GenerateSignature({
         id: User.id,
         email: User.email,
-        verified: User.verified
-      })
+        verified: User.verified,
+      });
 
       return res.status(201).json({
         message: "User created succesfully",
