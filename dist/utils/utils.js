@@ -35,6 +35,6 @@ const GeneratePassword = async (password, salt) => {
 };
 exports.GeneratePassword = GeneratePassword;
 const GenerateSignature = async (payload) => {
-    return jsonwebtoken_1.default.sign(payload, config_1.APP_SECRET, { expiresIn: "Id" });
+    return jsonwebtoken_1.default.sign(payload, config_1.APP_SECRET, { expiresIn: "1" });
 };
 exports.GenerateSignature = GenerateSignature;
