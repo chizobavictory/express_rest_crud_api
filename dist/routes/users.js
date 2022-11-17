@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const userscontroller_1 = require("../controller/userscontroller");
 const router = express_1.default.Router();
 router.post('/signup', userscontroller_1.Register);
+router.post('/verify/:signature', userscontroller_1.verifyUser);
 exports.default = router;

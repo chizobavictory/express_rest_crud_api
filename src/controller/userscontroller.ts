@@ -9,11 +9,13 @@ import {
   sendmail,
   emailHTML,
   GenerateSignature,
+  verifySignature,
 } from "../utils";
 import { UserAttributes, UserInstance } from "../model/userModel";
 import { v4 as uuidv4 } from "uuid";
 import { fromAdminMail, userSubject } from "../config";
 
+/** ================================ Registration ================================ **/
 export const Register = async (req: Request, res: Response) => {
   try {
     const { email, phone, password, confirm_password } = req.body;
@@ -77,18 +79,42 @@ export const Register = async (req: Request, res: Response) => {
       });
 
       return res.status(201).json({
-        message: "User created succesfully",
+        message: "User created succesfully, check your email or phone for OTP verification",
         signature,
+        verified: User.verified,
       });
     }
     return res.status(400).json({
       message: "User already exists",
     });
   } catch (err: any) {
-    console.log(err.message);
     res.status(500).json({
       Error: "Internal server Error",
       route: "/users/signup",
+    });
+  }
+};
+
+/** ================================ Verify User ================================ **/
+//create user verification
+export const verifyUser = async (req: Request, res: Response) => {
+  try {
+    const token = req.params.signature;
+    const decode = await verifySignature(token);
+
+    const User = (await UserInstance.findOne({
+      where: { email: decode.email },
+    })) as unknown as UserAttributes;
+
+    if (User) {
+      const { otp } = req.body;
+      if (User.otp === parseInt(otp) && User.otp_expiry >= new Date()) {
+      }
+    }
+  } catch (err) {
+    res.status(500).json({
+      Error: "Internal server Error",
+      route: "/users/verify"
     });
   }
 };

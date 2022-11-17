@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Register = void 0;
+exports.verifyUser = exports.Register = void 0;
 const utils_1 = require("../utils");
 const userModel_1 = require("../model/userModel");
 const uuid_1 = require("uuid");
 const config_1 = require("../config");
+/** ================================ Registration ================================ **/
 const Register = async (req, res) => {
     try {
         const { email, phone, password, confirm_password } = req.body;
@@ -58,8 +59,9 @@ const Register = async (req, res) => {
                 verified: User.verified,
             });
             return res.status(201).json({
-                message: "User created succesfully",
+                message: "User created succesfully, check your email or phone for OTP verification",
                 signature,
+                verified: User.verified,
             });
         }
         return res.status(400).json({
@@ -67,7 +69,6 @@ const Register = async (req, res) => {
         });
     }
     catch (err) {
-        console.log(err.message);
         res.status(500).json({
             Error: "Internal server Error",
             route: "/users/signup",
@@ -75,3 +76,26 @@ const Register = async (req, res) => {
     }
 };
 exports.Register = Register;
+/** ================================ Verify User ================================ **/
+//create user verification
+const verifyUser = async (req, res) => {
+    try {
+        const token = req.params.signature;
+        const decode = await (0, utils_1.verifySignature)(token);
+        const User = (await userModel_1.UserInstance.findOne({
+            where: { email: decode.email },
+        }));
+        if (User) {
+            const { otp } = req.body;
+            if (User.otp === parseInt(otp) && User.otp_expiry >= new Date()) {
+            }
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            Error: "Internal server Error",
+            route: "/users/verify"
+        });
+    }
+};
+exports.verifyUser = verifyUser;

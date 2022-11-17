@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GenerateSignature = exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
+exports.verifySignature = exports.GenerateSignature = exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -38,3 +38,7 @@ const GenerateSignature = async (payload) => {
     return jsonwebtoken_1.default.sign(payload, config_1.APP_SECRET, { expiresIn: "1" });
 };
 exports.GenerateSignature = GenerateSignature;
+const verifySignature = async (signature) => {
+    return jsonwebtoken_1.default.verify(signature, config_1.APP_SECRET);
+};
+exports.verifySignature = verifySignature;

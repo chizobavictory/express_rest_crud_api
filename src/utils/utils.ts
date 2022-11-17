@@ -1,6 +1,6 @@
 import Joi from "joi";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload} from "jsonwebtoken";
 import { APP_SECRET } from "../config";
 import { AuthPayload } from "../interface/Auth.dto";
 
@@ -32,7 +32,10 @@ export const GeneratePassword = async (password: string, salt: string) => {
   return await bcrypt.hash(password, salt);
 };
 
-
 export const GenerateSignature = async (payload: AuthPayload) => {
   return jwt.sign(payload, APP_SECRET, { expiresIn: "1" });
+};
+
+export const verifySignature = async(signature: string) => {
+  return jwt.verify(signature, APP_SECRET) as JwtPayload
 };
