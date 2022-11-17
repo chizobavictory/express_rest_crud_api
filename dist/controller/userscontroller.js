@@ -4,6 +4,7 @@ exports.Register = void 0;
 const utils_1 = require("../utils");
 const userModel_1 = require("../model/userModel");
 const uuid_1 = require("uuid");
+const config_1 = require("../config");
 const Register = async (req, res) => {
     try {
         const { email, phone, password, confirm_password } = req.body;
@@ -19,6 +20,9 @@ const Register = async (req, res) => {
         const userPassword = await (0, utils_1.GeneratePassword)(password, salt);
         //Generate OTP
         const { otp, expiry } = (0, utils_1.GenerateOTP)();
+        //Send Mail to user
+        const html = (0, utils_1.emailHTML)(otp);
+        await (0, utils_1.sendmail)(config_1.fromAdminMail, email, config_1.userSubject, html);
         //check if user exists
         const User = await userModel_1.UserInstance.findOne({ where: { email: email } });
         //create user
@@ -40,6 +44,9 @@ const Register = async (req, res) => {
             });
             // Send OTP to user
             await (0, utils_1.onRequestOTP)(otp, phone);
+            //Send mail to user
+            const html = (0, utils_1.emailHTML)(otp);
+            await (0, utils_1.sendmail)(config_1.fromAdminMail, email, config_1.userSubject, html);
             return res.status(201).json({
                 message: "User created succesfully",
                 user,

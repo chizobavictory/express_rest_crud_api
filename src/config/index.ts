@@ -15,5 +15,6 @@ export const authToken = process.env.AuthToken
 export const fromAdminPhone = process.env.fromAdminPhone
 export const GMAIL_USER=process.env.GMAIL_USER
 export const GMAIL_PASS=process.env.GMAIL_PASS
-export const fromAdminMail =process.env.fromAdminMail
+export const fromAdminMail =process.env.fromAdminMail as string
+export const userSubject =process.env.userSubject!
 

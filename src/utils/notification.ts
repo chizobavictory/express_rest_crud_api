@@ -1,4 +1,4 @@
-import { accountSid, authToken, fromAdminPhone, GMAIL_PASS, GMAIL_USER } from "../config";
+import { accountSid, authToken, fromAdminMail, fromAdminPhone, GMAIL_PASS, GMAIL_USER, userSubject } from "../config";
 import nodemailer from "nodemailer";
 
 export const GenerateOTP = () => {
@@ -20,7 +20,7 @@ export const onRequestOTP = async (otp: number, toPhoneNumber: string) => {
 };
 
 const transport = nodemailer.createTransport({
-  host: "gmail",
+  service: "gmail",
   auth: {
     user: GMAIL_USER,
     pass: GMAIL_PASS,
@@ -30,20 +30,29 @@ const transport = nodemailer.createTransport({
   },
 });
 
-
-export const mailSent = async(
-  from:string , 
-  to:string , 
-  subject:string , 
-  text:string , // plain text body
-  html: string, // html body
-)=>{
+export const sendmail = async (from: string, to: string, subject: string, html: string) => {
   try {
-    await transport.sendMail({
-      from: 
-    })
+    const response = await transport.sendMail({
+      from: fromAdminMail,
+      to,
+      subject: userSubject,
+      html,
+    });
+    return response;
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
-}
+};
 
+export const emailHTML = (otp: number): string => {
+  const temp = `
+  <div style="max-width:700px;  font-size:110%; border:10px solid #ddd; padding:50px 20px; margin:auto" text-align:center>
+  <h2 style="text-transform:uppercase; color:teal; text-align:center">
+  Welcome to Victory store
+  </h2>
+  <p>Hi there, your otp is ${otp}, it will expire in 30min</p>
+  
+  </div>
+  `;
+  return temp;
+};

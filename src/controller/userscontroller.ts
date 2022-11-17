@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { registerSchema, option, GeneratePassword, GenerateSalt, GenerateOTP, onRequestOTP } from "../utils";
+import { registerSchema, option, GeneratePassword, GenerateSalt, GenerateOTP, onRequestOTP, sendmail, emailHTML } from "../utils";
 import { UserInstance } from "../model/userModel";
 import { v4 as uuidv4 } from "uuid";
+import { fromAdminMail, userSubject } from "../config";
 
 export const Register = async (req: Request, res: Response) => {
   try {
@@ -20,6 +21,10 @@ export const Register = async (req: Request, res: Response) => {
 
     //Generate OTP
     const { otp, expiry } = GenerateOTP();
+
+    //Send Mail to user
+    const html = emailHTML(otp)
+    await sendmail(fromAdminMail, email,userSubject, html )
 
     //check if user exists
     const User = await UserInstance.findOne({ where: { email: email } });
@@ -44,6 +49,10 @@ export const Register = async (req: Request, res: Response) => {
 
       // Send OTP to user
       await onRequestOTP(otp, phone);
+
+      //Send mail to user
+      const html = emailHTML(otp)
+      await sendmail(fromAdminMail,email, userSubject,html)
 
       return res.status(201).json({
         message: "User created succesfully",
