@@ -29,6 +29,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/http-errors": "^2.0.1",
+    "@types/jsonwebtoken": "^8.5.9",
     "@types/morgan": "^1.9.3",
     "@types/nodemailer": "^6.4.6",
     "@types/uuid": "^8.3.4"

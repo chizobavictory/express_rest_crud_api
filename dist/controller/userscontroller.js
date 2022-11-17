@@ -47,9 +47,19 @@ const Register = async (req, res) => {
             //Send mail to user
             const html = (0, utils_1.emailHTML)(otp);
             await (0, utils_1.sendmail)(config_1.fromAdminMail, email, config_1.userSubject, html);
+            //Check if user exists
+            const User = await userModel_1.UserInstance.findOne({
+                where: { email: email },
+            });
+            //Generate GenerateSignature
+            let signature = await (0, utils_1.GenerateSignature)({
+                id: User.id,
+                email: User.email,
+                verified: User.verified
+            });
             return res.status(201).json({
                 message: "User created succesfully",
-                user,
+                signature,
             });
         }
         return res.status(400).json({

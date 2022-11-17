@@ -1,6 +1,16 @@
 import { Request, Response } from "express";
-import { registerSchema, option, GeneratePassword, GenerateSalt, GenerateOTP, onRequestOTP, sendmail, emailHTML } from "../utils";
-import { UserInstance } from "../model/userModel";
+import {
+  registerSchema,
+  option,
+  GeneratePassword,
+  GenerateSalt,
+  GenerateOTP,
+  onRequestOTP,
+  sendmail,
+  emailHTML,
+  GenerateSignature
+} from "../utils";
+import { UserAttributes, UserInstance } from "../model/userModel";
 import { v4 as uuidv4 } from "uuid";
 import { fromAdminMail, userSubject } from "../config";
 
@@ -23,8 +33,8 @@ export const Register = async (req: Request, res: Response) => {
     const { otp, expiry } = GenerateOTP();
 
     //Send Mail to user
-    const html = emailHTML(otp)
-    await sendmail(fromAdminMail, email,userSubject, html )
+    const html = emailHTML(otp);
+    await sendmail(fromAdminMail, email, userSubject, html);
 
     //check if user exists
     const User = await UserInstance.findOne({ where: { email: email } });
@@ -51,12 +61,24 @@ export const Register = async (req: Request, res: Response) => {
       await onRequestOTP(otp, phone);
 
       //Send mail to user
-      const html = emailHTML(otp)
-      await sendmail(fromAdminMail,email, userSubject,html)
+      const html = emailHTML(otp);
+      await sendmail(fromAdminMail, email, userSubject, html);
+
+      //Check if user exists
+      const User = await UserInstance.findOne({
+        where: { email: email },
+      }) as unknown as UserAttributes;
+
+      //Generate GenerateSignature
+      let signature = await GenerateSignature({
+        id: User.id,
+        email: User.email,
+        verified: User.verified
+      })
 
       return res.status(201).json({
         message: "User created succesfully",
-        user,
+        signature,
       });
     }
     return res.status(400).json({
