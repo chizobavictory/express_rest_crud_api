@@ -1,6 +1,6 @@
 import Joi from "joi";
 import bcrypt from "bcrypt";
-import jwt, {JwtPayload} from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { APP_SECRET } from "../config";
 import { AuthPayload } from "../interface/Auth.dto";
 
@@ -13,6 +13,11 @@ export const registerSchema = Joi.object().keys({
     .required()
     .label("Confirm password")
     .messages({ "any.only": "{{#label}} does not match" }),
+});
+
+export const loginSchema = Joi.object().keys({
+  email: Joi.string().required(),
+  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
 });
 
 export const option = {
@@ -33,9 +38,13 @@ export const GeneratePassword = async (password: string, salt: string) => {
 };
 
 export const GenerateSignature = async (payload: AuthPayload) => {
-  return jwt.sign(payload, APP_SECRET, { expiresIn: "1" });
+  return jwt.sign(payload, APP_SECRET, { expiresIn: "1d" });
 };
 
-export const verifySignature = async(signature: string) => {
-  return jwt.verify(signature, APP_SECRET) as JwtPayload
+export const verifySignature = async (signature: string) => {
+  return jwt.verify(signature, APP_SECRET) as JwtPayload;
+};
+
+export const validatePassword = async (enteredPassword: string, savedPassword: string, salt: string) => {
+  return (await GeneratePassword(enteredPassword, salt)) === savedPassword;
 };
