@@ -16,6 +16,7 @@ import {
 import { UserAttributes, UserInstance } from "../model/userModel";
 import { v4 as uuidv4 } from "uuid";
 import { fromAdminMail, userSubject } from "../config";
+import Response from "twilio/lib/http/response";
 
 /** ================================ Registration ================================ **/
 export const Register = async (req: Request, res: Response) => {
@@ -237,5 +238,15 @@ export const getSingleUser = async(req: Request, res: Response)=>{
       Error: "internal server error",
       route: "/users/get-user",
     }) 
+  }
+}
+
+export const updateUserProfile=(req:Request,res:Response)=>{
+  try {
+    const id = req.user.id
+  } res.status(500).json({
+    Error: "internal server error",
+    route: "/users/get-user",
+  })
   }
 }

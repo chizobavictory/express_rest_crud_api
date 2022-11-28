@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSingleUser = exports.getAllUsers = exports.resendOTP = exports.Login = exports.verifyUser = exports.Register = void 0;
+exports.updateUserProfile = exports.getSingleUser = exports.getAllUsers = exports.resendOTP = exports.Login = exports.verifyUser = exports.Register = void 0;
 const utils_1 = require("../utils");
 const userModel_1 = require("../model/userModel");
 const uuid_1 = require("uuid");
@@ -210,3 +210,14 @@ const getSingleUser = async (req, res) => {
     }
 };
 exports.getSingleUser = getSingleUser;
+const updateUserProfile = (req, res) => {
+    try {
+        const id = req.user.id;
+    }
+    finally { }
+    res.status(500).json({
+        Error: "internal server error",
+        route: "/users/get-user",
+    });
+};
+exports.updateUserProfile = updateUserProfile;
